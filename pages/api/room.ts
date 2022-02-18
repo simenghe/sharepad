@@ -1,23 +1,21 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createClient } from "redis";
-import generateName from "../../utils/generateName";
 
 type Data = {
   name: string;
 };
-// const client = createClient();
-// client.on("error", (err) => console.log("Redis Client Error", err));
+const client = createClient();
+client.on("error", (err) => console.log("Redis Client Error", err));
 
 // Start the connection here.
-// (async () => {
-//   await client.connect();
-//   console.log("REDIS client connected.");
-// })();
+(async () => {
+  await client.connect();
+  console.log("REDIS client connected.");
+})();
 
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
-  const randomName: string = generateName();
-  return res.status(200).json({ name: randomName });
+  return res.status(200).json({ name: "cane" });
 }
 
 export default function handler(

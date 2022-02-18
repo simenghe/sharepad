@@ -1,15 +1,45 @@
-import type { NextPage } from "next";
+import type { NextPage, NextPageContext } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import React, { MouseEvent, useState } from "react";
+import { useRouter } from "next/router";
+import React, { MouseEvent, useEffect, useState } from "react";
+import axios from "axios";
 import styles from "../styles/Home.module.css";
 
-const Home: NextPage = () => {
+interface IRoom {
+  name: string;
+}
+interface IProps {
+  startingRoom: string;
+}
+
+function Home(props: IProps) {
+  const router = useRouter();
   const [roomName, setRoomName] = useState<string>("");
-  function onGenerateNameClicked(event: MouseEvent<HTMLButtonElement>) {
+
+  useEffect(() => {
+    getAndSetRoom();
+  }, []);
+
+  async function getAndSetRoom() {
+    const resp = await axios.get<IRoom>("/api/generatename");
+    setRoomName(resp.data.name);
+  }
+
+  async function onGenerateNameClicked(event: MouseEvent<HTMLButtonElement>) {
+    try {
+      getAndSetRoom();
+      event.preventDefault();
+    } catch (err: unknown) {
+      console.error(err);
+    }
+  }
+
+  // Redirect user to their room and send a POST request adding room to cache.
+  async function handleSubmit(event: React.FormEvent) {
+    console.log(roomName);
+    router.push(`/${roomName}`);
     event.preventDefault();
-    setRoomName("Bananas");
-    console.log("Generate Name Clicked.");
   }
 
   return (
@@ -23,15 +53,12 @@ const Home: NextPage = () => {
       {/* sharebox */}
       <main className={styles.main}>
         <h1 className="text-6xl text-center">
-          Welcome to <span className="text-blue-400">SharePad!</span>
+          Welcome to <span className="text-blue-400 font-bold">SharePad!</span>
         </h1>
         <h1 className="text-2xl py-12">Create your room here!</h1>
         <form
           className="p-4 flex flex-col justify-center items-center"
-          onSubmit={(e) => {
-            e.preventDefault();
-            console.log(roomName);
-          }}
+          onSubmit={handleSubmit}
         >
           <label className="py-2">Name your room </label>
           <input
@@ -44,6 +71,7 @@ const Home: NextPage = () => {
           {/* <div className="grid grid-cols-2 place-items-center"> */}
           <div className="flex flex-none gap-2">
             <button
+              type="button"
               onClick={onGenerateNameClicked}
               className="bg-blue-200 rounded-lg border-black border-2 p-1"
             >
@@ -73,6 +101,6 @@ const Home: NextPage = () => {
       </footer>
     </div>
   );
-};
+}
 
 export default Home;
