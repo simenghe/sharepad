@@ -7,7 +7,7 @@ import {
 } from "unique-names-generator";
 
 const customConfig: Config = {
-  dictionaries: [adjectives, colors],
+  dictionaries: [adjectives, colors, animals],
   separator: "-",
   length: 2,
 };

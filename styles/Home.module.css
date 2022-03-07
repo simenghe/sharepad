@@ -114,3 +114,7 @@
     flex-direction: column;
   }
 }
+
+.slab {
+  font-family: "Alfa Slab One", serif;
+}

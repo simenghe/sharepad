@@ -35,15 +35,25 @@ function Home(props: IProps) {
     }
   }
 
+  interface IRoomResponse {
+    name: string;
+  }
   // Redirect user to their room and send a POST request adding room to cache.
   async function handleSubmit(event: React.FormEvent) {
-    console.log(roomName);
-    router.push(`/${roomName}`);
     event.preventDefault();
+    console.log(roomName);
+    const resp = await axios.get<IRoomResponse>(`/api/room?id=${roomName}`);
+    console.log(resp.data);
+
+    await router.push(`/${roomName}`);
   }
 
   return (
     <div className={styles.container}>
+      <link
+        href="https://fonts.googleapis.com/css?family=Alfa%20Slab%20One"
+        rel="stylesheet"
+      ></link>
       <Head>
         <title>SharePad | Secure Text Sharing Platform</title>
         <meta name="description" content="Throwaway text sharing rooms." />
@@ -53,7 +63,8 @@ function Home(props: IProps) {
       {/* sharebox */}
       <main className={styles.main}>
         <h1 className="text-6xl text-center">
-          Welcome to <span className="text-blue-400 font-bold">SharePad!</span>
+          Welcome to{" "}
+          <span className="text-6xl text-blue-400 font-display">SharePad!</span>
         </h1>
         <h1 className="text-2xl py-12">Create your room here!</h1>
         <form
@@ -68,7 +79,6 @@ function Home(props: IProps) {
             onChange={(e) => setRoomName(e.target.value)}
             value={roomName}
           ></input>
-          {/* <div className="grid grid-cols-2 place-items-center"> */}
           <div className="flex flex-none gap-2">
             <button
               type="button"

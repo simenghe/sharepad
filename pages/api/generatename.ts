@@ -6,14 +6,14 @@ import generateName from "../../utils/generateName";
 type Data = {
   name: string;
 };
-// const client = createClient();
-// client.on("error", (err) => console.log("Redis Client Error", err));
+const client = createClient();
+client.on("error", (err) => console.log("Redis Client Error", err));
 
 // Start the connection here.
-// (async () => {
-//   await client.connect();
-//   console.log("REDIS client connected.");
-// })();
+(async () => {
+  await client.connect();
+  console.log("REDIS client connected.");
+})();
 
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
   const randomName: string = generateName();

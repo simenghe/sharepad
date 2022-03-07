@@ -15,6 +15,22 @@ client.on("error", (err) => console.log("Redis Client Error", err));
 })();
 
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
+  console.log(req.query);
+  if (!req.query || !req.query.id) {
+    return res.status(400).json({ err: "No id for a room" });
+  }
+  const id = req.query.id.toString();
+  const queryResult = await client.GET(id);
+
+  if (queryResult) {
+    const errMsg = `Room ${id} already exists!`;
+    console.log(errMsg);
+    return res.status(206).json({ msg: errMsg });
+  }
+
+  const set = await client.SETEX(id, 60, "occupied");
+
+  console.log(queryResult);
   return res.status(200).json({ name: "cane" });
 }
 
